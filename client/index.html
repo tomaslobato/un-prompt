@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>UN PROMPT</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+  <canvas id="view"></canvas>
+  <div id="menu">
+    <div class="shell">
+      <form id="join" class="plate" autocomplete="off">
+        <p class="eyebrow">Arena libre · 100 de vida</p>
+        <h1>UN<br><span>PROMPT</span></h1>
+        <p class="lede">Entra, elige bando y arma. Si estás solo, dos reclutas te buscan.</p>
+        <label class="field" for="name">Nombre
+          <input id="name" name="name" maxlength="16" minlength="2" required spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="Tu nombre">
+        </label>
+        <fieldset class="pick">
+          <legend>Apariencia</legend>
+          <div class="skins">
+            <button type="button" class="skin is-on" data-skin="t">
+              <svg viewBox="0 0 64 80" aria-hidden="true">
+                <rect x="22" y="34" width="20" height="26" fill="#c6a56d"/>
+                <rect x="24" y="38" width="16" height="16" fill="#5e4b34"/>
+                <rect x="18" y="8" width="28" height="24" rx="4" fill="#171717"/>
+                <rect x="24" y="16" width="16" height="4" fill="#e6dcc8"/>
+                <rect x="16" y="46" width="6" height="10" fill="#9a3030"/>
+                <rect x="20" y="60" width="8" height="16" fill="#4a3b2a"/>
+                <rect x="36" y="60" width="8" height="16" fill="#4a3b2a"/>
+              </svg>
+              <span>Terrorista</span>
+            </button>
+            <button type="button" class="skin" data-skin="ct">
+              <svg viewBox="0 0 64 80" aria-hidden="true">
+                <rect x="22" y="34" width="20" height="26" fill="#3c516c"/>
+                <rect x="24" y="38" width="16" height="16" fill="#1e2a3a"/>
+                <rect x="18" y="6" width="28" height="26" rx="6" fill="#1a2430"/>
+                <rect x="22" y="16" width="20" height="6" fill="#b7d4ea"/>
+                <rect x="20" y="60" width="8" height="16" fill="#2a3544"/>
+                <rect x="36" y="60" width="8" height="16" fill="#2a3544"/>
+              </svg>
+              <span>Antiterrorista</span>
+            </button>
+          </div>
+        </fieldset>
+        <fieldset class="pick">
+          <legend>Arma</legend>
+          <div id="weapons" class="weapons"></div>
+          <p id="weapon-line" class="weapon-line"></p>
+        </fieldset>
+        <p id="menu-error" class="error" role="alert" hidden></p>
+        <p id="status" class="status" hidden></p>
+        <button id="play" class="go" type="submit" disabled>Jugar</button>
+        <p class="fine">WASD mover · ratón mirar · clic disparar · clic derecho apuntar · R recargar · Ctrl agacharse · Shift correr · Espacio saltar · F disparar · M silenciar</p>
+      </form>
+      <aside class="schematic" aria-hidden="true">
+        <p class="eyebrow">Mapa</p>
+        <svg viewBox="0 0 200 200">
+          <rect x="8" y="8" width="184" height="184" fill="#1a1612" stroke="#e2a23a" stroke-width="4"/>
+          <rect x="28" y="22" width="46" height="14" fill="#de7436"/>
+          <rect x="86" y="18" width="14" height="40" fill="#3d84b0"/>
+          <rect x="118" y="22" width="36" height="14" fill="#b24338"/>
+          <rect x="150" y="70" width="12" height="46" fill="#de7436"/>
+          <rect x="124" y="70" width="12" height="46" fill="#3d84b0"/>
+          <rect x="46" y="112" width="78" height="36" fill="#a39e94"/>
+          <polygon points="70,148 100,148 100,176 70,176" fill="#b5a999"/>
+          <rect x="22" y="96" width="28" height="8" fill="#cfc6b4"/>
+          <rect x="22" y="128" width="22" height="28" fill="#979287"/>
+          <rect x="78" y="78" width="18" height="6" fill="#cfc6b4"/>
+          <rect x="108" y="86" width="6" height="18" fill="#cfc6b4"/>
+        </svg>
+        <ul>
+          <li>Contenedores y muros para cubrirte</li>
+          <li>Rampas y escaleras para tomar altura</li>
+          <li>Ocho puntos de aparición</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <div id="hud" hidden>
+    <div id="cross" class="ak"><i></i><i></i><i></i><i></i><b></b></div>
+    <div id="scope" hidden></div>
+    <div id="hitmarker"></div>
+    <div id="dmg"><span></span></div>
+    <div id="vignette"></div>
+    <div id="topbar"><span id="ping">—</span></div>
+    <div id="elim-stack"></div>
+    <p id="teach">WASD · ratón · clic · clic derecho apuntar · R recargar</p>
+    <div id="bottom">
+      <div id="hp-wrap">
+        <div id="hp-bar"></div>
+        <span id="hp-num">100</span>
+      </div>
+      <p id="state-line"></p>
+      <div id="ammo-wrap">
+        <span id="weapon-name"></span>
+        <strong id="mag">0</strong>
+        <em id="reserve">0</em>
+      </div>
+    </div>
+    <div id="hint" hidden>
+      <p>Clic para apuntar</p>
+      <button id="quit" type="button">Abandonar partida</button>
+    </div>
+  </div>
+
+  <div id="death" hidden>
+    <p id="killcam-tag">Killcam</p>
+    <div class="death-card">
+      <p class="eyebrow">Has muerto</p>
+      <h2>Asesinado por <span id="killer-name"></span></h2>
+      <p id="killer-meta"></p>
+      <button id="back-menu" type="button">Volver al menú</button>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
